@@ -1,40 +1,46 @@
-<html>  
+<html>
     <head>
-		<title>Ace Editor</title>
-		<style>
-		  #editor { 
-			position: absolute;
-			top: 26px;
-			right: 0;
-			bottom: 0;
-			left: 0;
-			}
-		</style>
-		<script src="ace/src-min-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<!-- Bootstrap -->
-		<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
-    	<script src="jquery.js"></script>
+        <title>Ace Editor</title>
+
+        <style>
+            #editor {
+                position: absolute;
+                top: 26px;
+                right: 0;
+                bottom: 0;
+                left: 0;
+            }
+        </style>
+
+        <script src="ace/src-min-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!-- Bootstrap -->
+        <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
+        <script src="jquery.js"></script>
         <script src="bootstrap/js/bootstrap.min.js"></script>
         
-	</head>
-	<body style="-webkit-user-select: none; -webkit-app-region: drag">
-		<div class="navbar navbar-inverse navbar-static-top">
-    		<div class="navbar-inner">
-				<ul class="nav">
-					<li class="dropdown">
-    					<a class="dropdown-toggle" data-toggle="dropdown" href="#">File</a>
-						<ul class="dropdown-menu">
-							<li><a id="newFile" href="#">New</a></li>
-							<li><a id="openFile" href="#">Open</a></li>
-							<li><a id="saveFile" href="#">Save</a></li>
-							<li><a id="saveasFile" href="#">Save As</a></li>
-							<li><a id="windowClose" href="#">Close</a></li>
-						</ul>
-					</li>
+    </head>
+
+    <body style="-webkit-user-select: none; -webkit-app-region: drag">
+
+        <div class="navbar navbar-inverse navbar-static-top">
+            <div class="navbar-inner">
+                <ul class="nav">
+
                     <li class="dropdown">
-        				<a class="dropdown-toggle" data-toggle="dropdown" href="#">Theme</a>
-						<ul class="dropdown-menu">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">File</a>
+                    <ul class="dropdown-menu">
+                        <li><a id="newFile" href="#">New</a></li>
+                        <li><a id="openFile" href="#">Open</a></li>
+                        <li><a id="saveFile" href="#">Save</a></li>
+                        <li><a id="saveasFile" href="#">Save As</a></li>
+                        <li><a id="windowClose" href="#">Close</a></li>
+                    </ul>
+                    </li>
+
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Theme</a>
+                        <ul class="dropdown-menu">
                             <li><a id="setTheme" href="#" data-theme="ambiance">ambiance</a></li>
                             <li><a id="setTheme" href="#" data-theme="chaos">chaos</a></li>
                             <li><a id="setTheme" href="#" data-theme="chrome">chrome</a></li>
@@ -64,18 +70,21 @@
                             <li><a id="setTheme" href="#" data-theme="twilight">twilight</a></li>
                             <li><a id="setTheme" href="#" data-theme="vibrant_ink">vibrant_ink</a></li>
                             <li><a id="setTheme" href="#" data-theme="xcode">xcode</a></li>
-						</ul>
-					</li>
+                        </ul>
+                    </li>
+
                     <li class="dropdown">
-        				<a class="dropdown-toggle" data-toggle="dropdown" href="#">Syntax</a>
-						<ul class="dropdown-menu" id="syntaxMenu">
-                            
-						</ul>
-					</li>
-				</ul>
-			</div>
-		</div>
-		<div id="editor"></div>
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Syntax</a>
+                        <ul class="dropdown-menu" id="syntaxMenu">
+                        </ul>
+                    </li>
+                </ul>
+
+            </div>
+        </div>
+
+        <div id="editor"></div>
+
         <script src="main.js"></script>
         <script>
             (function(){
@@ -83,7 +92,9 @@
                 window.appLoad(gui);
             })();
         </script>
+
         <input style="display:none;" id="openfileDialog" type="file"/>
         <input style="display:none;" id="saveasDialog"  type="file" nwsaveas />
-	</body>
+
+    </body>
 </html>
