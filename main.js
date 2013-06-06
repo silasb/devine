@@ -28,6 +28,10 @@ if(!window.appLoad){
 
         var editor = ace.edit("editor");
 
+        win.on('focus', function() {
+            editor.focus();
+        });
+
         editor.commands.addCommand({
             name: 'open_file_dialog',
             bindKey: { mac: 'Command-O' },
