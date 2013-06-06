@@ -29,6 +29,22 @@ if(!window.appLoad){
         var editor = ace.edit("editor");
 
         editor.commands.addCommand({
+            name: 'open_file_dialog',
+            bindKey: { mac: 'Command-O' },
+            exec: function(editor) {
+                $('#openFile').click();
+            }
+        });
+
+        editor.commands.addCommand({
+            name: 'new_editor',
+            bindKey: { mac: 'Command-N' },
+            exec: function(editor) {
+                $("#newFile").click();
+            }
+        });
+
+        editor.commands.addCommand({
             name: 'beautify',
             bindKey: { mac: "Command-Shift-B", win: "Shift-Ctrl-B" },
             exec: function(editor) {
