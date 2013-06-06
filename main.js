@@ -23,7 +23,14 @@ if(!window.appLoad){
 
         function OpenFileWindow(filename) {
             var win = gui.Window.open('index.html', appconfig.window);
+            var x = getRandomInt(10, 100);
+            var y = getRandomInt(10, 100);
+            win.moveBy(x, y);
             win.currentFile = filename;
+        }
+
+        function getRandomInt(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
         }
 
         var editor = ace.edit("editor");
