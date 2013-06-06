@@ -1,72 +1,73 @@
 if(!window.appLoad){
     var appconfig = require("./package.json");
     window.appLoad = function(gui) {
-        
+
         var ace = window.ace;
-        
+
         var detectedMode;
-        
+
         var Range = ace.require("ace/range").Range;
         var jsbeautify = require("./jsbeautify/jsbeautify.js");
-        
-        var win = gui.Window.get(); 
+
+        var win = gui.Window.get();
         win.show();
         var fs = require("fs");
         var Path = require("path");
-    
-        if(!window.global.OpenerLoaded){
+
+        if (!window.global.OpenerLoaded) {
             window.global.OpenerLoaded = true;
-            gui.App.on("open",function(filename){
+            gui.App.on("open",function(filename) {
                 OpenFileWindow(filename);
             });
         }
-        
-        function OpenFileWindow(filename){
+
+        function OpenFileWindow(filename) {
             var win = gui.Window.open('index.html', appconfig.window);
             win.currentFile = filename;
         }
-        
+
         var editor = ace.edit("editor");
-        
+
         editor.commands.addCommand({
             name: 'beautify',
-            bindKey: {mac: "Command-Shift-B", win: "Shift-Ctrl-B"},
+            bindKey: { mac: "Command-Shift-B", win: "Shift-Ctrl-B" },
             exec: function(editor) {
-                
+
                 var sel = editor.selection;
                 var session = editor.session;
                 var range = sel.getRange();
                 var options = {};
-                    options.space_before_conditional = true;
-                    options.keep_array_indentation =  false;
-                    options.preserve_newlines =  true;
-                    options.unescape_strings =  true;
-                    options.jslint_happy =  false;
-                    options.brace_style =  "end-expand";
-            
-                    if (session.getUseSoftTabs()) {
-                        options.indent_char = " ";
-                        options.indent_size = session.getTabSize();
-                    } else {
-                        options.indent_char = "\t";
-                        options.indent_size = 1;
-                    }
-                
+
+                options.space_before_conditional = true;
+                options.keep_array_indentation =  false;
+                options.preserve_newlines =  true;
+                options.unescape_strings =  true;
+                options.jslint_happy =  false;
+                options.brace_style =  "end-expand";
+
+                if (session.getUseSoftTabs()) {
+                    options.indent_char = " ";
+                    options.indent_size = session.getTabSize();
+                } else {
+                    options.indent_char = "\t";
+                    options.indent_size = 1;
+                }
+
                 var line = session.getLine(range.start.row);
                 var indent = line.match(/^\s*/)[0];
                 var trim = false;
-        
+
                 if (range.start.column < indent.length)
                     range.start.column = 0;
                 else
                     trim = true;
-        
-        
+
+
                 var value = session.getTextRange(range);
                 $("[data-mode]").parent().removeClass("active");
                 //var syntax = session.syntax;
                 var type = null;
-        
+
                 if (detectedMode == "javascript") {
                     type = "js";
                 } else if (detectedMode == "css") {
@@ -83,7 +84,7 @@ if(!window.appLoad){
                     else
                         type = "js";
                 }
-        
+
                 try {
                     value = jsbeautify[type + "_beautify"](value, options);
                     if (trim)
@@ -95,15 +96,14 @@ if(!window.appLoad){
                     window.alert("Error: This code could not be beautified " + syntax + " is not supported yet");
                     return;
                 }
-        
+
                 var end = session.replace(range, value);
                 sel.setSelectionRange(Range.fromPoints(range.start, end));
-                
-            },
-            readOnly: false // false if this command should not apply in readOnly mode
-        });
-        
-        
+
+                },
+                readOnly: false // false if this command should not apply in readOnly mode
+            });
+
         var theme = window.localStorage.aceTheme || "twilight";
         editor.setTheme("ace/theme/"+theme);
         var editorSession = editor.getSession();
@@ -166,8 +166,10 @@ if(!window.appLoad){
             xquery: ["XQuery", "xq", "text/x-xquery"],
             yaml: ["YAML", "yaml", "text/x-yaml"]
         };
+
         var fileExtensions = {}, ModesCaption = {}, contentTypes = {}, hiddenMode = {}, otherMode = {};
         var syntaxMenuHtml = "";
+
         Object.keys(SupportedModes).forEach(function(name) {
             var mode = SupportedModes[name];
             mode.caption = mode[0];
@@ -182,51 +184,51 @@ if(!window.appLoad){
             hiddenMode[mode.caption] = mode.hidden;
             otherMode[mode.caption] = mode.other;
             contentTypes[mode.mime] = name;
-            
+
             syntaxMenuHtml += '<li><a href="#" data-mode="'+name+'">'+mode.caption+'</a></li>';
         });
-        
+
         $("#syntaxMenu").html(syntaxMenuHtml);
-        
-    
+
+
         var hasChanged = false;
-        var currentFile = 
-                win.currentFile ? 
+        var currentFile =
+                win.currentFile ?
                 win.currentFile :
-                process && 
-                process._nw_app && 
+                process &&
+                process._nw_app &&
                 fs.existsSync(process._nw_app.argv[0]) ?
-                process._nw_app.argv[0] : 
+                process._nw_app.argv[0] :
                 null ;
-        
-        if(win.currentFile){
+
+        if(win.currentFile) {
             openFile(currentFile);
-        }else if (process && process._nw_app && fs.existsSync(process._nw_app.argv[0])) {
-            try{
+        } else if (process && process._nw_app && fs.existsSync(process._nw_app.argv[0])) {
+            try {
                 openFile(process._nw_app.argv[0]);
-            }catch(e){
+            } catch(e){
                 console.log(e);
             }
-        }else{
+        } else {
             openFile();
         }
-    
-    
+
         editorSession.on("change", function() {
             if (currentFile) {
                 hasChanged = true;
                 $("title").text("*" + currentFile);
             }
         });
-    
+
         $(window).keypress(function(event) {
             if (!(event.which == 115 && event.ctrlKey) && event.which !== 19) return true;
             event.preventDefault();
             if (!currentFile) return false;
             saveFileFN();
+
             return false;
         });
-        
+
         function openFile(path) {
             if (hasChanged && !saveFileFN(true)) return false;
             currentFile = null;
@@ -244,10 +246,11 @@ if(!window.appLoad){
                 path = "Untitled";
                 editor.getSession().setValue("");
             }
-    
+
             currentFile = path;
             $("title").text(currentFile);
         }
+
         function saveasDialog(name) {
             var chooser = $(name);
             chooser.trigger('click');
@@ -258,26 +261,28 @@ if(!window.appLoad){
                 saveFileFN();
             });
         }
+
         function saveFileFN() {
             if (/*hasChanged &&*/ currentFile !== "Untitled") {
                 var data = editor.getSession().getValue(); //.replace(/\n/g,"\r\n");
                 if(currentFile == "Untitled"){
                     saveasDialog('#saveasDialog');
-                }else{
+                } else {
                     fs.writeFileSync(currentFile, data, "utf8");
                     $("title").text(currentFile);
                     hasChanged = false;
                 }
-            }else{
+            } else {
                 saveasDialog('#saveasDialog');
             }
         }
-    
+
         $("#newFile").click(function() {
             if (confirm("All Changes will be lost?")) {
                 openFile();
             }
         });
+
         $("#openFile").click(function() {
             function chooseFile(name) {
                 var chooser = $(name);
@@ -290,24 +295,26 @@ if(!window.appLoad){
             }
             chooseFile('#openfileDialog');
         });
+
         $("#saveFile").click(function() {
             saveFileFN();
         });
+
         $("#saveasFile").click(function() {
             saveasDialog('#saveasDialog');
         });
-        
+
         //Theme
-        
+
         $("[data-theme]").click(function(e) {
             theme = e.target.attributes["data-theme"].value;
             window.localStorage.aceTheme = theme;
             editor.setTheme("ace/theme/"+theme);
-            
+
             $("[data-theme]").parent().removeClass("active");
             $("[data-theme='"+theme+"']").parent().addClass("active");
         });
-        
+
         var darkThemes = [
             'ambiance',
             'chaos',
@@ -328,42 +335,42 @@ if(!window.appLoad){
             'twilight',
             'vibrant_ink'
         ];
-        
-        function isDarkTheme(theme){
-            for(var i in darkThemes){
+
+        function isDarkTheme(theme) {
+            for(var i in darkThemes) {
                 if(darkThemes[i] == theme) return true;
             }
             return false;
         }
-        
-        $("[data-theme]").hover(function(e){
+
+        $("[data-theme]").hover(function(e) {
             var ttheme = e.target.attributes["data-theme"].value;
             editor.setTheme("ace/theme/"+ttheme);
-            if(isDarkTheme(ttheme)){
+            if(isDarkTheme(ttheme)) {
                 $(".navbar-static-top").addClass("navbar-inverse");
-            }else{
+            } else {
                 $(".navbar-static-top").removeClass("navbar-inverse");
             }
-        },function(){
+        }, function(){
             var ttheme = window.localStorage.aceTheme;
             editor.setTheme("ace/theme/"+ttheme);
-            if(isDarkTheme(ttheme)){
+            if(isDarkTheme(ttheme)) {
                 $(".navbar-static-top").addClass("navbar-inverse");
-            }else{
+            } else {
                 $(".navbar-static-top").removeClass("navbar-inverse");
             }
         });
-        
+
         $("[data-theme]").parent().removeClass("active");
         $("[data-theme='"+theme+"']").parent().addClass("active");
-        if(isDarkTheme(theme)){
+        if(isDarkTheme(theme)) {
             $(".navbar-static-top").addClass("navbar-inverse");
-        }else{
+        } else {
             $(".navbar-static-top").removeClass("navbar-inverse");
         }
-        
+
         //Syntax
-        
+
         $("[data-mode]").click(function(e) {
             var mode = e.target.attributes["data-mode"].value;
             editor.getSession().setMode("ace/mode/" + mode);
@@ -371,31 +378,29 @@ if(!window.appLoad){
             $("[data-mode]").parent().removeClass("active");
             $("[data-mode='"+mode+"']").parent().addClass("active");
         });
-        
-        
+
         $("[data-mode]").hover(function(e){
             var mode = e.target.attributes["data-mode"].value;
             editor.getSession().setMode("ace/mode/" + mode);
-        },function(){
+        }, function(){
             editor.getSession().setMode("ace/mode/" + detectedMode);
         });
-        
+
         $("[data-mode]").parent().removeClass("active");
         $("[data-mode='"+detectedMode+"']").parent().addClass("active");
-            
+
         win.on('close', function() {
             function disp_confirm() {
                 var r = confirm("Press a button!");
                 if (r === true) {
                     alert("You pressed OK!");
-                }
-                else {
+                } else {
                     this.close(true);
                 }
             }
             win.close(true);
         });
-    
+
         $("#windowClose").click(function() {
             win.close();
         });
