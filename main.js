@@ -12,6 +12,13 @@ if(!window.appLoad){
         var jsbeautify = require("./jsbeautify/jsbeautify.js");
 
         var win = gui.Window.get();
+
+        var menubar = new gui.Menu({ type: 'menubar' });
+        var file_menu = new gui.Menu();
+        file_menu.append(new gui.MenuItem({ label: 'Item A' }));
+        menubar.insert(new gui.MenuItem({ label: 'File', submenu: file_menu}), 0);
+        win.menu = menubar;
+
         win.show();
 
         if (!window.global.OpenerLoaded) {
