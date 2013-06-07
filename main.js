@@ -1,6 +1,8 @@
 if(!window.appLoad){
     var appconfig = require("./package.json");
     window.appLoad = function(gui) {
+        var fs = require("fs");
+        var Path = require("path");
 
         var ace = window.ace;
 
@@ -11,8 +13,6 @@ if(!window.appLoad){
 
         var win = gui.Window.get();
         win.show();
-        var fs = require("fs");
-        var Path = require("path");
 
         if (!window.global.OpenerLoaded) {
             window.global.OpenerLoaded = true;
@@ -34,6 +34,10 @@ if(!window.appLoad){
         }
 
         var editor = ace.edit("editor");
+
+        // Default settings for Ace Editor
+        editor.setFontSize(14);
+        editor.getSession().setTabSize(2);
 
         win.on('focus', function() {
             editor.focus();
