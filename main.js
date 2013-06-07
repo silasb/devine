@@ -44,6 +44,14 @@ if(!window.appLoad){
         });
 
         editor.commands.addCommand({
+            name: 'save',
+            bindKey: { mac: 'Command-S' },
+            exec: function(editor) {
+                $('#saveFile').click();
+            }
+        });
+
+        editor.commands.addCommand({
             name: 'open_file_dialog',
             bindKey: { mac: 'Command-O' },
             exec: function(editor) {
