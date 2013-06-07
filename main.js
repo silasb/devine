@@ -254,8 +254,10 @@ if(!window.appLoad){
 
         editorSession.on("change", function() {
             if (currentFile) {
-                hasChanged = true;
-                $("title").text("*" + currentFile);
+                if (!hasChanged) {
+                    hasChanged = true;
+                    $("title").text("*" + currentFile);
+                }
             }
         });
 
