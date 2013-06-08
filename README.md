@@ -11,10 +11,8 @@ Features in Devine
 
 ----
 
-To run: Download `node-webkit` @ https://github.com/rogerwang/node-webkit
+Creating Mac OS X App
 
-Its best if you [build this app](https://github.com/rogerwang/node-webkit/wiki/How-to-package-and-distribute-your-apps) using `node-webkit` package builder.
-
-This source is ready to build..  follow building instruction from above link
-
-Thanks Bradley Matusiak - bmatusiak@gmail.com for the initial codebase.
+```
+cd devine && make
+```
