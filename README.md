@@ -7,7 +7,7 @@ Features in Devine
 
 *   Highlighting
 *   Themes
-*   jsbeautify  (ctrl+shift+b)
+*   jsbeautify
 
 ----
 
