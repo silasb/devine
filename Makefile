@@ -1,8 +1,10 @@
 all: download build
 
 download:
-	curl -O https://s3.amazonaws.com/node-webkit/v0.5.1/node-webkit-v0.5.1-osx-ia32.zip
-	unzip node-webkit-v0.5.1-osx-ia32.zip -d node-webkit/
+	if [ ! -e "./node-webkit-v0.5.1-osx-ia32.zip" ]; then \
+		curl -O https://s3.amazonaws.com/node-webkit/v0.5.1/node-webkit-v0.5.1-osx-ia32.zip; \
+	fi
+	unzip -o node-webkit-v0.5.1-osx-ia32.zip -d node-webkit/
 
 build:
 	mkdir -p out
